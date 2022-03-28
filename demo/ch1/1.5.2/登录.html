@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录注销</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+<body>
+    <div id="container" style="text-align: center">
+        <h1>{{title}}</h1>
+        <div v-if="needLogin">账号：<input type="text" v-model="userName"/></div>
+        <div v-if="needLogin">密码：<input type="password" v-model="passWord"/></div>
+        <button v-on:click="buttonClick">{{buttonTitle}}</button>
+    </div>
+</body>
+<script>
+    const App = {
+        data() {
+            return {
+                title: "欢迎：未登录",
+                needLogin: true,
+                userName: "",
+                passWord: "",
+                buttonTitle: "登录"
+            }
+        },
+        methods: {
+            buttonClick(){
+                if(this.needLogin){//当前需要登录
+                    this.login();
+                }
+                else{
+                    this.logout();
+                }
+            },
+            login(){
+                if(this.userName.length === 0 || this.passWord.length === 0){
+                    alert("请输入账号和密码");
+                }
+                else{
+                    this.title = `欢迎：${this.userName}`;
+                    this.needLogin = false;
+                    //清空输入框
+                    this.userName = "";
+                    this.passWord = "";
+                    this.buttonTitle = "注销";
+                }
+            },
+            logout(){
+                    this.title= "欢迎：未登录";
+                    this.needLogin= true;
+                    this.userName= "";
+                    this.passWord= "";
+                    this.buttonTitle= "登录";
+            }
+        }
+  }
+  Vue.createApp(App).mount("#container");
+</script>
+</html>
