@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>模板基础</title>
+	<script src="https://unpkg.com/vue@next"></script>
+</head>
+<body>
+<div id="container" style="text-align: center">
+	<p>v-bind:id = "id"对应:id = "id"</p>
+	<p>v-on:click = "func"对应@click = "func"</p>
+
+	<p :id = "id">这是一个p标签，点击按钮可以改变标签的id</p>
+	<button @click="changeColor">改变颜色</button>
+</div>
+</body>
+
+<style>
+	#red {
+		color: red;
+	}
+	#blue {
+		color: blue;
+	}
+</style>
+
+<script>
+	const App = {
+		data() {
+			return {
+				id: "red"
+			}
+		},
+		methods: {
+			changeColor(){
+				if(this.id === "red"){//当前需要登录
+					this.id = "blue";
+				}
+				else{
+					this.id = "red";
+				}
+			}
+		}
+	}
+	Vue.createApp(App).mount("#container");
+</script>
+</html>
