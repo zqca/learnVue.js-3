@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "UTF-8">
+	<title>ball</title>
+	<script src = "https://unpkg.com/vue@next"></script>
+</head>
+<body>
+	<div id = "container">
+		<div id = "box" @mousemove.stop = "move"></div>
+		<div id = "ball" :style="{left: offsetX + 'px', top: offsetY + 'px'}"></div>
+	</div>
+</body>
+
+<style>
+	#container{
+		position: relative;
+	}
+	#box{
+		background-color: bisque;
+		width: 400px;
+		height: 400px;
+	}
+	#ball{
+		background-color: aqua;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		position: absolute;
+	}
+</style>
+
+<script>
+	const App = {
+		data() {
+			return {
+				offsetX: 0,
+				offsetY: 0
+			}
+		},
+		methods: {
+			move(event){
+				if(event.clientX + 20 > 400){
+					this.offsetX = 400 - 40;
+				}
+				else if(event.clientX - 20 < 0){
+					this.offsetX = 0;
+				}
+				else{
+					this.offsetX = event.clientX - 20;
+				}
+
+				if(event.clientY + 20 > 400){
+					this.offsetY = 400 - 40;
+				}
+				else if(event.clientY - 20 < 0){
+					this.offsetY = 0;
+				}
+				else{
+					this.offsetY = event.clientY - 20;
+				}
+			}
+		}
+	}
+	Vue.createApp(App).mount("#container");
+</script>
+</html>
