@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Game</title>
+    <script src = "https://unpkg.com/vue@next"></script>
+</head>
+<body>
+    <div id="application">
+	    <button @click="reStart" style="margin-left: 50%">开始</button>
+	    <div id="container">
+		    <div id="board" :style="{left: boardX + 'px'}"></div>
+		    <div id="ball" :style="{left: ballX + 'px', top: ballY + 'px'}"></div>
+		    <h1 v-if="isFail" style="text-align: center">游戏结束</h1>
+	    </div>
+    </div>
+</body>
+
+<style>
+	body{
+		position: relative;
+	}
+	#application{
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, 50%);
+
+	}
+	#container{
+		margin-top: 10px;
+		background-color: bisque;
+		width: 440px;
+		height: 440px;
+		position: relative;
+	}
+	#ball{
+		background-color: blueviolet;
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	#board{
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 80px;
+		height: 10px;
+		background-color: brown;
+		border-radius: 5px;
+	}
+</style>
+
+<script>
+    const App = {
+        data(){
+        	return {
+		        isFail: false,
+		        //球的位置和两个方向的移动速度
+		        ballX: 0,
+		        ballY: 0,
+		        ballRateX: 0,
+		        ballRateY: 0,
+		        //板的位置
+		        boardX: 0
+	        }
+        },
+	    mounted(){//组件生命周期函数，组件加载时会调用
+            //添加键盘事件
+		    this.enterKeyup();
+	    },
+        methods:{
+            keydown(event){
+            	if (event.key == "ArrowLeft"){
+            		if (this.boardX > 10){
+            			this.boardX -= 20;
+		            }
+	            }
+            	else if (event.key == "ArrowRight"){
+            		if (this.boardX < 440 - 80){
+            		//	板长度为80，容器长度为440
+			            this.boardX += 20;
+		            }
+	            }
+            },
+	        enterKeyup(){
+            	document.addEventListener("keydown", this.keydown);
+	        },
+	        startGame(){
+            	this.ballX = 0;
+            	this.ballY = 0;
+		        //随机设置运动速度和方向
+		        this.ballRateX = (Math.random() + 0.1);
+		        this.ballRateY = (Math.random() + 0.1);
+
+		        this.boardX = 0;
+		        this.isFail = false;
+
+		        //开启计数器，控制球的运动
+		        this.timer = setInterval(()=>{
+			        //到达右边界，反弹
+			        if (this.ballX + this.ballRateX >= 440 - 30){
+				        //球的长度是30px
+				        this.ballRateX *= -1;//掉头
+			        }
+			        //到左边界，反弹
+			        if (this.ballX + this.ballRateX <= 0){
+				        this.ballRateX *= -1;
+			        }
+			        //到上边界
+			        if (this.ballY +this.ballRateY <= 0){
+				        this.ballRateY *= -1;
+			        }
+
+			        //正常运动
+			        this.ballX += this.ballRateX;
+			        this.ballY += this.ballRateY;
+
+			        //下边界，能否接到
+			        if(this.ballY >= 440 - 30 - 10){
+				        //球的高度30px, 板的厚度10px
+				        if(this.ballX >= this.boardX - 30 && this.ballX <= this.boardX + 80){
+					        this.ballRateY *= -1;
+				        }
+				        else {
+					        clearInterval(this.timer);//停止运动
+					        this.isFail = true;
+				        }
+			        }
+		        }, 2);
+	        },
+	        reStart(){
+            	this.startGame();
+	        }
+        }
+    };
+    Vue.createApp(App).mount("#application");
+</script>
+</html>
